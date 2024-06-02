@@ -52,7 +52,7 @@ except Exception as e:
         image_tag = "backend"
         client.images.build(path=".", tag=image_tag, rm=True)
 
-        # Run the container with a timeout
+        # Run the container
         log = client.containers.run(image_tag, auto_remove=True, network_disabled=True, command="python execute_script.py")
         print(log.decode('utf-8'))
         return log.decode('utf-8')

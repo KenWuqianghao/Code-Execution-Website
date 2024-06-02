@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Editor from '@monaco-editor/react';
-import { Button, Card} from '@nextui-org/react';
+import Terminal from './terminal'; // Adjust the import path as needed
 
-function App() {
+export default function Home() {
   const [code, setCode] = useState("# Write your Python code here\nprint('Hello, world!')");
   const [output, setOutput] = useState("");
 
@@ -13,7 +13,7 @@ function App() {
   };
 
   // fetch response from http://localhost:8000/execute/ with the code
-  const executeCode = async () => {
+  const runCode = async () => {
     const response = await fetch("http://localhost:8000/execute/", {
       method: "POST",
       headers: {
@@ -26,29 +26,26 @@ function App() {
   };
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      <Card>
+    <div className="flex h-screen">
+      <div className="relative w-1/2 h-full">
         <Editor
-          height="50vh"
+          height="100%"
           defaultLanguage="python"
           theme="vs-dark"
-          defaultValue={code}
+          value={code}
           onChange={handleEditorChange}
         />
-      </Card>
-      <Card>
-        <div className="p-4">
-          <Button onClick={executeCode} auto>
-            Run Code
-          </Button>
-          <div className="mt-4">
-            <h2>Output:</h2>
-            <pre>{output}</pre>
-          </div>
-        </div>
-      </Card>
+        <button
+          onClick={runCode}
+          className="absolute right-10 bottom-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition-colors"
+          style={{ zIndex: 1000 }} // Ensure the button is above all other content
+        >
+          Run Code
+        </button>
+      </div>
+      <div className="w-1/2 h-full bg-black">
+        <Terminal output={output} />
+      </div>
     </div>
   );
 }
-
-export default App;
